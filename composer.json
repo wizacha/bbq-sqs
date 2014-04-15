@@ -1,0 +1,28 @@
+{
+    "name": "wizacha/bbq",
+    "description": "Message Queue abstraction library for PHP, based on eventio/bbq",
+    "type": "library",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Wizacha Dev Team",
+            "email": "dev@wizacha.com",
+            "homepage": "http://wizacha.com"
+        }
+    ],
+    "support": {
+        "source": "https://bitbucket.org/wizacha/bbq/src"
+    },
+    "require": {
+        "eventio/bbq": "dev-master"
+    },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "wizacha\\": "src/"
+        }
+    }
+}
