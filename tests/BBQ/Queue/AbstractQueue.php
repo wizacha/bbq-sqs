@@ -30,17 +30,63 @@ abstract class AbstractQueue extends atoum
     public function testPushFetch()
     {
         $expectedPayload = "Hello World";
-        $createdJob = $this->bbq->pushJob(
+        $this->bbq->pushJob(
             self::QUEUE_NAME,
             new \Eventio\BBQ\Job\Payload\StringPayload($expectedPayload)
         );
         $fetchedJob = $this->bbq->fetchJob(self::QUEUE_NAME);
         $this
-            ->object($createdJob)->isInstanceOf('\Eventio\BBQ\Job\JobInterface')
             ->object($fetchedJob)->isInstanceOf('\Eventio\BBQ\Job\JobInterface')
-            ->castToString($createdJob->getPayload())->isIdenticalTo($expectedPayload)
             ->castToString($fetchedJob->getPayload())->isIdenticalTo($expectedPayload)
         ;
+    }
+
+    public function testFinalizeJob()
+    {
+        $expectedPayload = 'testFinalizeJob';
+
+        $this->bbq->pushJob(
+            self::QUEUE_NAME,
+            new \Eventio\BBQ\Job\Payload\StringPayload($expectedPayload)
+        );
+
+        $job = $this->bbq->fetchJob(self::QUEUE_NAME);
+        $this
+            ->object($job)->isInstanceOf('\Eventio\BBQ\Job\JobInterface')
+            ->castToString($job->getPayload())->isIdenticalTo($expectedPayload)
+        ;
+
+        $this->bbq->finalizeJob($job);
+
+        $job = $this->bbq->fetchJob(self::QUEUE_NAME);
+        $this
+            ->variable($job)->isNull();
+    }
+
+    public function testReleaseJob()
+    {
+        $expectedPayload = 'testReleaseJob';
+
+        $this->bbq->pushJob(
+            self::QUEUE_NAME,
+            new \Eventio\BBQ\Job\Payload\StringPayload($expectedPayload)
+        );
+
+        $job = $this->bbq->fetchJob(self::QUEUE_NAME);
+        $this
+            ->object($job)->isInstanceOf('\Eventio\BBQ\Job\JobInterface')
+            ->castToString($job->getPayload())->isIdenticalTo($expectedPayload);
+
+        $nulljob = $this->bbq->fetchJob(self::QUEUE_NAME);
+        $this
+            ->variable($nulljob)->isNull();
+
+        $this->bbq->getQueue(self::QUEUE_NAME)->releaseJob($job);
+
+        $job = $this->bbq->fetchJob(self::QUEUE_NAME);
+        $this
+            ->object($job)->isInstanceOf('\Eventio\BBQ\Job\JobInterface')
+            ->castToString($job->getPayload())->isIdenticalTo($expectedPayload);
     }
 
     public function testEmptyQueue()
@@ -79,7 +125,7 @@ abstract class AbstractQueue extends atoum
 
         $job = $this->bbq->fetchJob(self::QUEUE_NAME);
         $this->boolean($queue->hasLockedJobs())->isTrue();
-        $queue->deleteLockedJob($job);
+        $queue->finalizeJob($job);
         $this->boolean($queue->hasLockedJobs())->isFalse();
     }
 } 

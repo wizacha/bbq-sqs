@@ -15,14 +15,21 @@
         "source": "https://bitbucket.org/wizacha/bbq/src"
     },
     "require": {
-        "eventio/bbq": "dev-master"
+        "eventio/bbq": "~1.0",
+        "aws/aws-sdk-php": "2.*"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/wizacha/bbq.git"
+        }
+    ],
     "require-dev": {
         "atoum/atoum": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "wizacha\\": "src/"
+            "Wizacha\\": "src/"
         }
     }
 }
