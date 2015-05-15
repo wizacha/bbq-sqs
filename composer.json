@@ -2,7 +2,7 @@
     "name": "wizacha/bbq",
     "description": "Message Queue abstraction library for PHP, based on eventio/bbq",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "minimum-stability": "stable",
     "authors": [
         {
